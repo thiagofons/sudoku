@@ -10,7 +10,7 @@ class SudokuApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Sudoku Game',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(colorSchemeSeed: Colors.blue),
       home: const HomeScreen(),
     );
   }

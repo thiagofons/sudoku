@@ -85,73 +85,75 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Jogador: ${widget.nickname}')),
-      body: Column(
-        children: [
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 9,
-                childAspectRatio: 1,
+      body: Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 9,
+                  childAspectRatio: 1,
+                ),
+                itemCount: 81,
+                itemBuilder: (context, index) {
+                  bool isInitial = _sudoku.puzzle[index] != -1;
+                  int value = _board[index];
+
+                  // Cálculo das linhas e colunas
+                  int row = index ~/ 9;
+                  int col = index % 9;
+
+                  // Definir espessura das bordas com base na posição para separar blocos 3x3
+                  double leftBorder = col % 3 == 0 ? 3.0 : 0.5;
+                  double rightBorder = (col + 1) % 3 == 0 ? 3.0 : 0.5;
+                  double topBorder = row % 3 == 0 ? 3.0 : 0.5;
+                  double bottomBorder = (row + 1) % 3 == 0 ? 3.0 : 0.5;
+
+                  return GestureDetector(
+                      onTap: () {
+                        if (!isInitial) {
+                          _showNumberInputDialog(context, index);
+                        }
+                      },
+                      child: Container(
+                          margin: const EdgeInsets.all(1.0),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              left: BorderSide(
+                                  width: leftBorder, color: Colors.black),
+                              right: BorderSide(
+                                  width: rightBorder, color: Colors.black),
+                              top: BorderSide(
+                                  width: topBorder, color: Colors.black),
+                              bottom: BorderSide(
+                                  width: bottomBorder, color: Colors.black),
+                            ),
+                            color: isInitial ? Colors.grey[300] : Colors.white,
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            value != -1 ? value.toString() : '',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: isInitial ? Colors.black : Colors.blue,
+                            ),
+                          )));
+                },
               ),
-              itemCount: 81,
-              itemBuilder: (context, index) {
-                bool isInitial = _sudoku.puzzle[index] != -1;
-                int value = _board[index];
-
-                // Cálculo das linhas e colunas
-                int row = index ~/ 9;
-                int col = index % 9;
-
-                // Definir espessura das bordas com base na posição para separar blocos 3x3
-                double leftBorder = col % 3 == 0 ? 3.0 : 0.5;
-                double rightBorder = (col + 1) % 3 == 0 ? 3.0 : 0.5;
-                double topBorder = row % 3 == 0 ? 3.0 : 0.5;
-                double bottomBorder = (row + 1) % 3 == 0 ? 3.0 : 0.5;
-
-                return GestureDetector(
-                    onTap: () {
-                      if (!isInitial) {
-                        _showNumberInputDialog(context, index);
-                      }
-                    },
-                    child: Container(
-                        margin: const EdgeInsets.all(1.0),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            left: BorderSide(
-                                width: leftBorder, color: Colors.black),
-                            right: BorderSide(
-                                width: rightBorder, color: Colors.black),
-                            top: BorderSide(
-                                width: topBorder, color: Colors.black),
-                            bottom: BorderSide(
-                                width: bottomBorder, color: Colors.black),
-                          ),
-                          color: isInitial ? Colors.grey[300] : Colors.white,
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          value != -1 ? value.toString() : '',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: isInitial ? Colors.black : Colors.blue,
-                          ),
-                        )));
-              },
             ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(_generateBoard);
-            },
-            child: const Text('Novo Jogo'),
-          ),
-        ],
+            ElevatedButton(
+              onPressed: () {
+                setState(_generateBoard);
+              },
+              child: const Text('Novo Jogo'),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  // Abre um diálogo para inserir um número
   // Abre um diálogo para inserir um número
   Future<void> _showNumberInputDialog(BuildContext context, int index) async {
     TextEditingController controller = TextEditingController();
@@ -163,6 +165,7 @@ class _GameScreenState extends State<GameScreen> {
           content: TextField(
             controller: controller,
             keyboardType: TextInputType.number,
+            autofocus: true,
             decoration: const InputDecoration(hintText: "Número"),
           ),
           actions: [
