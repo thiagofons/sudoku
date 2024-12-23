@@ -68,10 +68,10 @@ class _GameScreenState extends State<GameScreen> {
     SudokuService sudokuService = SudokuService();
 
     Map<String, int> difficultyMap = {
-      'easy': 1,
-      'medium': 2,
-      'hard': 3,
-      'expert': 4,
+      'easy': 0,
+      'medium': 1,
+      'hard': 2,
+      'expert': 3,
     };
 
     SudokuModel game = SudokuModel(
