@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sudoku/model/sudoku.dart';
+import 'package:sudoku/service/sudoku.dart';
 import 'package:sudoku_dart/sudoku_dart.dart';
 
 class GameScreen extends StatefulWidget {
@@ -62,8 +64,26 @@ class _GameScreenState extends State<GameScreen> {
     return true;
   }
 
+  void _saveGame() async {
+    SudokuService sudokuService = SudokuService();
+
+    Map<String, int> difficultyMap = {
+      'easy': 1,
+      'medium': 2,
+      'hard': 3,
+      'expert': 4,
+    };
+
+    SudokuModel game = SudokuModel(
+      name: widget.nickname,
+      result: _board.contains(-1) ? 0 : 1,
+      date: DateTime.now().toString(),
+      level: difficultyMap[widget.difficulty]!,
+    );
+    await sudokuService.saveMatchInDatabase(game);
+  }
+
   void _checkCompletion() {
-    // Só verificar a solução se todas as células estiverem preenchidas
     if (!_board.contains(-1)) {
       bool isCorrect = true;
       for (int i = 0; i < 81; i++) {
@@ -72,12 +92,15 @@ class _GameScreenState extends State<GameScreen> {
           break;
         }
       }
-      // Mostrar uma mensagem apenas se o tabuleiro estiver correto ou incorreto
       String message = isCorrect
           ? "Parabéns, você completou o jogo corretamente!"
           : "O tabuleiro não está correto. Tente novamente!";
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(message)));
+
+      if (isCorrect) {
+        _saveGame();
+      }
     }
   }
 
