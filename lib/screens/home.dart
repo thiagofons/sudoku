@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sudoku/screens/game.dart';
+import 'package:sudoku/screens/my_games.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,6 +27,15 @@ class _HomeScreenState extends State<HomeScreen> {
           nickname: _nicknameController.text,
           difficulty: _selectedDifficulty,
         ),
+      ),
+    );
+  }
+
+  void _goToMyGames() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const MyGamesScreen(),
       ),
     );
   }
@@ -131,6 +141,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: const Text(
                     'Iniciar Jogo',
                     style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                ElevatedButton(
+                  onPressed: _goToMyGames,
+                  style: ElevatedButton.styleFrom(
+                    side: const BorderSide(color: Colors.grey, width: 1),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 40),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    backgroundColor: Colors.white,
+                  ),
+                  child: const Text(
+                    'Meus Jogos',
+                    style: TextStyle(fontSize: 20, color: Colors.grey),
                   ),
                 ),
               ],

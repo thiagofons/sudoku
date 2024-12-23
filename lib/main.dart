@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sudoku/screens/home.dart';
 
-void main() => runApp(const SudokuApp());
+void main() {
+  debugPrint = (String? message, {int? wrapWidth}) {};
+
+  runApp(const SudokuApp());
+}
 
 class SudokuApp extends StatelessWidget {
   const SudokuApp({super.key});
